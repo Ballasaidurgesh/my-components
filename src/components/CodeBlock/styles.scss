@@ -1,0 +1,27 @@
+.code-block {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+
+  .shiki {
+    padding: 20px;
+    font-size: 0.9rem;
+    max-height: 350px;
+    overflow: auto;
+  }
+
+  &__copy-icon{
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    color: #fff;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 28px;
+
+    &:hover{
+      background-color: #ffffff30;
+    }
+  }
+}

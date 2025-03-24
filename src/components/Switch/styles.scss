@@ -1,0 +1,68 @@
+.switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &__label {
+    color: var(--color-input-label);
+    font-size: var(--input-font-size);
+    font-weight: 500;
+  }
+
+  &__button {
+    background-color: var(--color-secondary);
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-radius: 50px;
+
+    .circle {
+      border-radius: 50%;
+      background-color: #fff;
+    }
+
+    &.switch-small {
+      width: 40px;
+      height: 20px;
+      padding: 0 0.2rem;
+
+      .circle {
+        width: 15px;
+        height: 15px;
+      }
+    }
+
+    &.switch-medium {
+      width: 50px;
+      height: 25px;
+      padding: 0 0.25rem;
+
+      .circle {
+        width: 18px;
+        height: 18px;
+      }
+    }
+
+    &.switch-large {
+      width: 60px;
+      height: 30px;
+      padding: 0 0.3rem;
+
+      .circle {
+        width: 22px;
+        height: 22px;
+      }
+    }
+
+    &.active {
+      justify-content: flex-end;
+      background-color: var(--color-primary);
+    }
+
+    &.disabled {
+      cursor: default;
+      opacity: 0.5;
+    }
+  }
+}

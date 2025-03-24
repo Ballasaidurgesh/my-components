@@ -1,0 +1,28 @@
+.checkbox-group {
+  &__options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px 20px;
+  }
+
+  &__option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    span {
+      font-size: var(--input-font-size);
+    }
+  }
+
+  input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  input[type="checkbox"]:checked {
+    accent-color: var(--color-primary);
+  }
+}

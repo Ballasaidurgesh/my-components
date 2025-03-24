@@ -1,0 +1,39 @@
+.text-input {
+  &__container {
+    width: 100%;
+    border: var(--input-border);
+    border-radius: var(--input-border-radius);
+    padding: 0 10px;
+    background-color: #fff;
+  }
+
+  &__password-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    .eye-icon {
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: var(--color-primary);
+    }
+  }
+
+  input {
+    width: 100%;
+    outline: none;
+    padding: 14px 0;
+    font-family: var(--input-font-family);
+    font-size: var(--input-font-size);
+    border: none;
+    border-radius: var(--input-border-radius);
+
+    &:disabled {
+      background: #ebebeb;
+    }
+
+    &::placeholder {
+      color: var(--color-input-placeholder);
+    }
+  }
+}
