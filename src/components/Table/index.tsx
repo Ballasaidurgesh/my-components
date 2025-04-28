@@ -3,7 +3,6 @@ import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { useEffect, useRef, useState } from "react";
 import { MenuItem, Pagination, Select, Skeleton, styled } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
 import {
   resetTableData,
   updateFilters,
@@ -12,7 +11,7 @@ import {
   updateSelectedRows,
   updateSortBy,
 } from "@/redux/tableSlice";
-import { AppDispatch, RootState } from "@/redux/store";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
 import useOnClickOutside from "@/hooks/useOnClickOutside";
 import { DateRange } from "react-date-range";
 import moment from "moment";
@@ -32,16 +31,16 @@ export type TColumns = {
   renderComponent?: any;
   searchType?: "date" | "menu" | "text";
   menuOptions?: { label: string; value: string }[];
-};
+}[];
 
 type TRows = {
   [key: string]: any;
 };
 
 type tableProps = {
-  columns: TColumns[];
+  columns: TColumns;
   rows: TRows[];
-  totalRecords: number;
+  totalRecords?: number;
   checkboxSelection?: boolean;
   disableSearch?: boolean;
   disableSortBy?: boolean;
@@ -61,10 +60,8 @@ function Table({
   cellPadding = "",
   height,
 }: tableProps) {
-  const { page, limit, isLoading, selectedRows, filters } = useSelector(
-    (state: RootState) => state.table,
-  );
-  const dispatch = useDispatch<AppDispatch>();
+  const { page, limit, isLoading, selectedRows, filters } = useAppSelector((state) => state.table);
+  const dispatch = useAppDispatch();
   const ref = useRef<HTMLTableSectionElement>(null);
 
   const totalPages = Math.ceil(totalRecords / limit);
@@ -348,18 +345,12 @@ function Table({
             )}
 
             {columns?.map((column, columnIndex) => (
-              <td
-                key={columnIndex}
-                className={row?.[column?.field]?.length > 70 ? "cell-width" : ""}
-                style={{ padding: cellPadding }}
-              >
-                {typeof row?.[column?.field] !== "object" ? (
-                  <p>{row?.[column?.field] as string}</p>
-                ) : (
-                  column?.renderComponent && (
-                    <column.renderComponent {...(row?.[column?.field] as object)} />
-                  )
-                )}
+              <td key={columnIndex} style={{ padding: cellPadding }}>
+                {typeof row?.[column?.field] !== "object"
+                  ? row?.[column?.field]
+                  : column?.renderComponent && (
+                      <column.renderComponent {...(row?.[column?.field] as object)} />
+                    )}
               </td>
             ))}
           </tr>
@@ -402,6 +393,7 @@ function Table({
           )}
         </table>
       </div>
+
       {/* pagination */}
       {isLoading ? (
         <PaginationLoading />

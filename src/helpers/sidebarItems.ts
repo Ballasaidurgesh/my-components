@@ -21,7 +21,7 @@ export const sidebarItems: TSidebarItems = [
   { label: "Tabs", link: "" },
   { label: "Switch", link: "" },
   { label: "Dialog", link: "" },
-  { label: "Table", link: "" },
+  { label: "Table", link: "/table" },
   { label: "Stepper", link: "" },
   { label: "File Upload", link: "" },
 ];

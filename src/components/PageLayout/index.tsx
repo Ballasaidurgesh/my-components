@@ -24,6 +24,7 @@ function PageLayout() {
               className={`sidebar-item ${item?.isTitle ? "title" : ""} ${
                 location.pathname === item.link ? "active" : ""
               }`}
+              onClick={() => navigate(item.link)}
             >
               {item.label}
             </div>

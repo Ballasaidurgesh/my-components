@@ -46,6 +46,7 @@ function FileUpload({
 
   const [isDragActive, setDragActive] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
+  const [timer, setTimer] = useState<NodeJS.Timeout>();
 
   useEffect(() => {
     onChange(files);
@@ -90,11 +91,13 @@ function FileUpload({
   function onDragOver(e: React.DragEvent<HTMLDivElement>) {
     e.preventDefault();
     setDragActive(true);
+    clearTimeout(timer);
   }
 
   function onDragLeave(e: React.DragEvent<HTMLDivElement>) {
     e.preventDefault();
-    setDragActive(false);
+    const timeout = setTimeout(() => setDragActive(false), 100);
+    setTimer(timeout);
   }
 
   function formatSize(size: number) {

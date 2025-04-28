@@ -190,7 +190,7 @@
           padding: 12px 15px;
           font-size: 0.875rem;
           white-space: nowrap;
-          font-weight: bold;
+          font-weight: 500;
           cursor: default;
 
           &:hover .sort-icon {
@@ -236,7 +236,7 @@
   }
 
   .pagination-container {
-    margin: 10px 0;
+    // margin: 10px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -254,7 +254,7 @@
       gap: 20px;
 
       p {
-        font-weight: 500;
+        // font-weight: 500;
         font-size: 0.9rem;
       }
     }
