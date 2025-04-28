@@ -11,8 +11,11 @@
   .table {
     height: calc(100% - 45px);
     width: 100%;
-    overflow-x: auto;
-    overflow-y: auto;
+    overflow: auto;
+
+    &::-webkit-scrollbar-track {
+      margin-top: 47px;
+    }
 
     input[type="checkbox"] {
       width: 1rem;
@@ -208,18 +211,12 @@
 
         td {
           padding: 12px 15px;
-          white-space: nowrap;
           font-weight: 400;
           font-size: 0.875rem;
-        }
-
-        .cell-width {
-          white-space: initial;
-          overflow-wrap: break-word;
-
-          p {
-            width: 300px;
-          }
+          max-width: 300px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
     }

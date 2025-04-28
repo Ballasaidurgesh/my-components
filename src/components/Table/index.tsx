@@ -26,6 +26,8 @@ export type TColumns = {
   label: string;
   field: string;
   width?: number;
+  maxWidth?: number;
+  textOverflow?: "nowrap" | "break-word";
   disableSearch?: boolean;
   disableSortBy?: boolean;
   renderComponent?: any;
@@ -345,7 +347,18 @@ function Table({
             )}
 
             {columns?.map((column, columnIndex) => (
-              <td key={columnIndex} style={{ padding: cellPadding }}>
+              <td
+                key={columnIndex}
+                style={{
+                  padding: cellPadding,
+                  maxWidth: column?.maxWidth,
+                  ...(column?.width && { minWidth: column?.width, maxWidth: column?.width }),
+                  ...(column?.textOverflow === "break-word" && {
+                    whiteSpace: "initial",
+                    overflowWrap: "break-word",
+                  }),
+                }}
+              >
                 {typeof row?.[column?.field] !== "object"
                   ? row?.[column?.field]
                   : column?.renderComponent && (
@@ -380,7 +393,7 @@ function Table({
   return (
     <div className="table-container" style={{ height: height ? `${height}vh` : "" }}>
       {/* <DateSearch /> */}
-      <div className="table">
+      <div className="table" style={{ height: totalRecords === 0 ? "100%" : "" }}>
         <table>
           <THead />
 
@@ -395,41 +408,37 @@ function Table({
       </div>
 
       {/* pagination */}
-      {isLoading ? (
-        <PaginationLoading />
-      ) : (
-        rows.length !== 0 && (
-          <div className="pagination-container">
-            <Pagination
-              count={totalPages}
-              shape="rounded"
-              size="small"
-              onChange={(_, value) => dispatch(updatePage(value))}
-              page={page}
-            />
+      {totalRecords !== 0 && rows.length !== 0 && (
+        <div className="pagination-container">
+          <Pagination
+            count={totalPages}
+            shape="rounded"
+            size="small"
+            onChange={(_, value) => dispatch(updatePage(value))}
+            page={page}
+          />
 
-            <div className="right-section">
-              <p>
-                Results: {startIndex} - {endIndex > totalRecords ? totalRecords : endIndex} of{" "}
-                {totalRecords}
-              </p>
+          <div className="right-section">
+            <p>
+              Results: {startIndex} - {endIndex > totalRecords ? totalRecords : endIndex} of{" "}
+              {totalRecords}
+            </p>
 
-              <CustomSelect
-                value={limit}
-                onChange={(e) => {
-                  dispatch(updatePage(1));
-                  dispatch(updateLimit(e.target.value));
-                }}
-              >
-                {limitOptions?.map((item, index) => (
-                  <MenuItem key={index} value={item}>
-                    {item}
-                  </MenuItem>
-                ))}
-              </CustomSelect>
-            </div>
+            <CustomSelect
+              value={limit}
+              onChange={(e) => {
+                dispatch(updatePage(1));
+                dispatch(updateLimit(e.target.value));
+              }}
+            >
+              {limitOptions?.map((item, index) => (
+                <MenuItem key={index} value={item}>
+                  {item}
+                </MenuItem>
+              ))}
+            </CustomSelect>
           </div>
-        )
+        </div>
       )}
     </div>
   );
@@ -450,19 +459,6 @@ const CustomSelect = styled(Select)({
     padding: "5px 8px",
   },
 });
-
-function PaginationLoading() {
-  return (
-    <div className="pagination-loading">
-      <Skeleton variant="text" sx={{ fontSize: "0.85rem" }} width={200} />
-
-      <div>
-        <Skeleton variant="text" sx={{ fontSize: "0.85rem" }} width={100} />
-        <Skeleton variant="text" sx={{ fontSize: "0.85rem" }} width={50} />
-      </div>
-    </div>
-  );
-}
 
 type menuProps = {
   options: { label: string; value: string }[] | [];
@@ -564,5 +560,3 @@ function DateSearch({
     </div>
   );
 }
-
-//text wrap, text overflow hidden, maxwidth, width, table overflow scroll

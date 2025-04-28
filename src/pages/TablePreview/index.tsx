@@ -4,7 +4,10 @@ const columns: TColumns = [
   { label: "Airline", field: "airlineName" },
   { label: "Safety or Life Threat?", field: "safetyLife" },
   { label: "Content Affected", field: "contentAffected" },
-  { label: "Classification", field: "classificationType" },
+  {
+    label: "Classification",
+    field: "classificationType",
+  },
   { label: "Flight/Truck Number", field: "flightTruckNo" },
   { label: "Handler Name", field: "orgName" },
   { label: "Modified Date", field: "modifiedDate" },
@@ -43,7 +46,7 @@ function TablePreview() {
       issuingAgent: null,
       flightDate: "15-04-2025",
       contentNature: null,
-      damgagePacking: "",
+      damgagePacking: "chemical, biological, radioactive leakage or spillage",
       damageDiscovered: "Delivery to agent",
       discoveresCaused: "discoveredby",
       classificationType:
