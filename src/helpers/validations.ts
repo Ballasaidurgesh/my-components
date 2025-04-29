@@ -11,7 +11,7 @@ type TValidations = {
   minLength?: number;
   customValidation?: (value: string) => string;
 };
-export type TFormValidations = { name: string; validations: TValidations };
+export type TFormValidations = { name: string; validations: TValidations }[];
 
 type TObject = { [key: string]: any };
 
@@ -22,7 +22,7 @@ function validate(value: any, validations: TValidations) {
     validations?.isRequired &&
     (!value || (typeof value === "string" ? value.trim()?.length === 0 : value?.length === 0))
   ) {
-    error = "is required";
+    error = "required";
   } else if (value && typeof value === "string" && value.length !== 0) {
     if (validations?.isEmail && !emailRegex.test(value)) {
       error = "Invalid email address";
@@ -45,7 +45,7 @@ function validate(value: any, validations: TValidations) {
 
 export function validateFormDataOnSubmit(
   inputs: TObject,
-  formValidations: TFormValidations[],
+  formValidations: TFormValidations,
 ): { isError: boolean; formErrors: { [key: string]: string } } {
   const errors = formValidations?.map((item) => {
     const error = validate(inputs[item.name], item.validations);
@@ -72,7 +72,7 @@ type TSetState = React.Dispatch<
 export function validateFormDataOnChange(
   name: string,
   value: any,
-  formValidations: TFormValidations[],
+  formValidations: TFormValidations,
   errors: { [key: string]: string },
   setErrors: TSetState,
 ) {

@@ -49,11 +49,19 @@ function Tabs({
         }`}
       >
         {options.map((item, index) => (
-          <div
+          <motion.div
             key={index}
             className={`tabs-container__tab  ${variants?.[variant]} ${
               item?.value === activeTab ? "active" : ""
             }`}
+            animate={
+              variant === "chip"
+                ? {
+                    color: item?.value === activeTab ? "#fff" : "#6e8295",
+                  }
+                : {}
+            }
+            transition={variant === "chip" ? { delay: item?.value === activeTab ? 0.15 : 0 } : {}}
             onClick={() => onChange(item?.value)}
           >
             {item?.label}
@@ -61,7 +69,7 @@ function Tabs({
             {isMount && item?.value === activeTab && (
               <motion.div layoutId="active-tab" className="active-tab"></motion.div>
             )}
-          </div>
+          </motion.div>
         ))}
       </div>
       <div className="tabs-container__right-section">{children}</div>

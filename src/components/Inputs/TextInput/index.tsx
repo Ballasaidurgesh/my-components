@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./styles.scss";
-import { TInputs } from "..";
 import { VscEye, VscEyeClosed } from "react-icons/vsc";
 
 const textFormats: { [key: string]: RegExp } = {
@@ -9,11 +8,17 @@ const textFormats: { [key: string]: RegExp } = {
   alphabetsWithoutSpace: /[^a-zA-Z]/g,
 };
 
-type textInputProps = Omit<React.ComponentProps<"input">, "onChange"> &
-  TInputs & {
-    type?: "text" | "password" | "number";
-    format?: "alphabets" | "number" | "currency" | "alphabetsWithoutSpace";
-  };
+type textInputProps = Omit<React.ComponentProps<"input">, "onChange" | "value"> & {
+  label?: string;
+  isRequired?: boolean;
+  placeholder?: string;
+  name: string;
+  value: string | { [key: string]: any };
+  error?: string | { [key: string]: string };
+  onChange?: (name: string, value: string) => void;
+  type?: "text" | "password" | "number";
+  format?: "alphabets" | "number" | "currency" | "alphabetsWithoutSpace";
+};
 
 function TextInput({
   label = "",
@@ -45,11 +50,16 @@ function TextInput({
     }
   }
 
+  const inputValue = typeof value === "string" ? value : value?.[name] || "";
+  const inputError = typeof error === "string" ? error : error?.[name] || "";
+
   return (
     <div className="input-container text-input">
-      <label>
-        {label} {isRequired && <span>*</span>}
-      </label>
+      {label && (
+        <label>
+          {label} {isRequired && <span>*</span>}
+        </label>
+      )}
 
       <div
         className={`text-input__container ${
@@ -57,10 +67,12 @@ function TextInput({
         }`}
       >
         <input
-          placeholder={placeholder ? placeholder : "Enter your " + label?.toLowerCase()}
+          placeholder={
+            placeholder ? placeholder : label ? "Enter your " + label?.toLowerCase() : ""
+          }
           type={type === "password" ? (showPassword ? "text" : "password") : type}
           name={name}
-          value={value}
+          value={inputValue}
           onChange={handleChange}
           onBlur={handleChange}
           {...rest}
@@ -77,7 +89,9 @@ function TextInput({
         )}
       </div>
 
-      <small>{error}</small>
+      <div className="input-error">
+        {inputError === "required" ? `${label} is required` : inputError}
+      </div>
     </div>
   );
 }

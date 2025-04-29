@@ -18,10 +18,11 @@ export const sidebarItems: TSidebarItems = [
       { label: "Loading", link: "#loading" },
     ],
   },
-  { label: "Tabs", link: "" },
+  { label: "Tabs", link: "/tabs" },
   { label: "Switch", link: "/switch" },
   { label: "Dialog", link: "/dialog" },
   { label: "Table", link: "/table" },
   { label: "Stepper", link: "" },
   { label: "File Upload", link: "" },
+  { label: "Inputs", link: "/inputs" },
 ];

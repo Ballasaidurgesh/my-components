@@ -5,33 +5,29 @@
   --color-input-selected: #f3f7fd;
 
   --input-font-family: var(--font-primary);
-  --input-font-size: 0.9rem;
+  --input-font-size: 0.85rem;
   --input-border: 1px solid var(--color-input-border);
   --input-border-radius: 8px;
 }
 
 .input-container {
-  margin: 10px 0;
-  margin-bottom: 18px;
   position: relative;
 
   label {
     display: block;
     color: var(--color-input-label);
     font-weight: 500;
-    margin-bottom: 10px;
-    font-size: var(--input-font-size);
+    margin-bottom: 2px;
+    font-size: 0.8rem;
 
     span {
       color: red;
     }
   }
 
-  small {
+  .input-error {
     color: red;
-    font-size: 0.8rem;
-    position: absolute;
-    bottom: -15px;
-    left: 0;
+    font-size: 0.75rem;
+    min-height: 18px;
   }
 }

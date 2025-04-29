@@ -46,7 +46,7 @@ function Autocomplete({
         disableClearable={disableClearable}
         options={options}
         value={inputValue || null}
-        onChange={(e, value) => handleChange(value)}
+        onChange={(_, value) => handleChange(value)}
       />
       <small>{error}</small>
     </div>

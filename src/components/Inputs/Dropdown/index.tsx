@@ -1,45 +1,72 @@
 import { MenuItem, Select, styled } from "@mui/material";
 import { RiArrowDownSLine } from "react-icons/ri";
-import { TInputs } from "..";
+import { useMemo } from "react";
 
-type props = TInputs & {
-  options: { label: string; value: string | number }[];
+type props = {
+  label?: string;
+  isRequired?: boolean;
+  placeholder?: string;
+  options: { label: string; value: string }[];
+  name: string;
+  value: string | { [key: string]: any };
+  error?: string | { [key: string]: string };
+  onChange?: (name: string, value: string) => void;
   disabled?: boolean;
+  size?: "small" | "medium";
 };
 
 function Dropdown({
   label,
   isRequired = false,
+  placeholder,
   options = [],
   name,
   value,
   error,
-  placeholder,
   disabled = false,
   onChange = () => null,
+  size = "medium",
 }: props) {
-  function handleChange(data: unknown) {
-    if (typeof data === "string") {
-      onChange(name, data);
-    }
-  }
+  const inputValue = typeof value === "string" ? value : value?.[name] || "";
+  const inputError = typeof error === "string" ? error : error?.[name] || "";
+
+  const CustomSelect = useMemo(() => {
+    return styled(Select)({
+      border: "var(--input-border)",
+      borderRadius: "var(--input-border-radius)",
+      backgroundColor: "#fff",
+
+      fieldset: {
+        border: "none",
+      },
+
+      ".MuiInputBase-input": {
+        padding: size === "small" ? "7px 10px" : "9px 10px",
+        fontSize: "var(--input-font-size)",
+        fontFamily: "var(--input-font-family)",
+      },
+
+      ".MuiSelect-icon": {
+        top: "25%",
+      },
+    });
+  }, [size]);
 
   return (
     <div className="input-container">
-      <label>
-        {label} {isRequired && <span>*</span>}
-      </label>
+      {label && (
+        <label>
+          {label} {isRequired && <span>*</span>}
+        </label>
+      )}
+
       <CustomSelect
         fullWidth
-        IconComponent={(props) => <RiArrowDownSLine size={25} {...props} />}
-        MenuProps={{
-          PaperProps: {
-            sx: dropdownStyles,
-          },
-        }}
-        value={!value ? "placeholder" : value}
+        IconComponent={(props) => <RiArrowDownSLine color="#00000050" size={22} {...props} />}
+        MenuProps={{ PaperProps: { sx: dropdownStyles } }}
+        value={!inputValue ? "placeholder" : inputValue}
         disabled={disabled}
-        onChange={(e) => handleChange(e.target.value)}
+        onChange={(e) => onChange(name, e.target.value as string)}
       >
         <MenuItem value="placeholder" sx={{ display: "none" }}>
           <span style={{ color: "var(--color-input-placeholder)" }}>
@@ -48,45 +75,32 @@ function Dropdown({
         </MenuItem>
 
         {options.map((option, index) => (
-          <MenuItem
-            key={index}
-            value={option?.value}
-            disableRipple
-            style={{ fontSize: "var(--input-font-size)" }}
-          >
+          <MenuItem key={index} value={option?.value} disableRipple style={menuItemStyles}>
             {option?.label}
           </MenuItem>
         ))}
       </CustomSelect>
-      <small>{error}</small>
+
+      <div className="input-error">
+        {inputError === "required" ? `${label} is required` : inputError}
+      </div>
     </div>
   );
 }
 
 export default Dropdown;
 
-const CustomSelect = styled(Select)({
-  border: "var(--input-border)",
-  borderRadius: "var(--input-border-radius)",
-  backgroundColor: "#fff",
-
-  fieldset: {
-    border: "none",
-  },
-
-  ".MuiInputBase-input": {
-    padding: "14px 10px",
-    fontSize: "var(--input-font-size)",
-    fontFamily: "var(--input-font-family)",
-  },
-
-  ".MuiSelect-icon": {
-    top: "25%",
-  },
-});
-
 const dropdownStyles = {
-  marginTop: 1,
+  marginTop: 0.5,
   border: "1px solid var(--color-input-border)",
   boxShadow: "none",
+  padding: "0 5px",
+  borderRadius: "var(--input-border-radius)",
+  // maxHeight: 300,
+};
+
+const menuItemStyles = {
+  fontFamily: "var(--input-font-family)",
+  fontSize: "var(--input-font-size)",
+  borderRadius: 5,
 };

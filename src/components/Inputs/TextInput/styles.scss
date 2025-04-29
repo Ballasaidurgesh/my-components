@@ -15,18 +15,17 @@
     .eye-icon {
       font-size: 1.4rem;
       cursor: pointer;
-      color: var(--color-primary);
+      color: #00000060;
     }
   }
 
   input {
     width: 100%;
-    outline: none;
-    padding: 14px 0;
+    padding: 10px 0;
     font-family: var(--input-font-family);
     font-size: var(--input-font-size);
     border: none;
-    border-radius: var(--input-border-radius);
+    outline: none;
 
     &:disabled {
       background: #ebebeb;

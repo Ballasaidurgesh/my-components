@@ -4,6 +4,8 @@ import PageLayout from "./components/PageLayout";
 import TablePreview from "./pages/TablePreview";
 import SwitchPreview from "./pages/SwitchPreview";
 import DialogPreview from "./pages/DialogPreview";
+import TabsPreview from "./pages/TabsPreview";
+import InputPreview from "./pages/InputPreview";
 
 function App() {
   return (
@@ -14,6 +16,8 @@ function App() {
           <Route path="table" element={<TablePreview />} />
           <Route path="switch" element={<SwitchPreview />} />
           <Route path="dialog" element={<DialogPreview />} />
+          <Route path="tabs" element={<TabsPreview />} />
+          <Route path="inputs" element={<InputPreview />} />
         </Route>
       </Routes>
     </BrowserRouter>
