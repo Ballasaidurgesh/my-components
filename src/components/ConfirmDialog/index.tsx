@@ -1,6 +1,6 @@
 import "./styles.scss";
-import Popup from "../Dialog";
 import Button from "../Button";
+import Dialog from "../Dialog";
 
 type confirmDialogProps = {
   title?: string;
@@ -26,7 +26,7 @@ function ConfirmDialog({
   onConfirm,
 }: confirmDialogProps) {
   return (
-    <Popup disableHeader isOpen={isOpen} width={width}>
+    <Dialog hideCancelIcon open={isOpen} width={width}>
       <div className="confirm-dialog">
         <h3>{title}</h3>
         <p>{description}</p>
@@ -39,7 +39,7 @@ function ConfirmDialog({
           </Button>
         </div>
       </div>
-    </Popup>
+    </Dialog>
   );
 }
 
