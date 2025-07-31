@@ -12,16 +12,16 @@ const sizesCodeString = `<Button size="sm" variant="outline">Small</Button>
 <Button size="md" variant="secondary">Medium</Button>
 <Button size="lg">Large</Button>`;
 
-const colorsCodeString = `<Button color="#EF4444">Primary</Button>
+const colorsCodeString = `<Button color="error">Primary</Button>
 <Button variant="secondary" color="#7E60BF">Secondary</Button>
-<Button variant="outline" color="#257180">Outline</Button>`;
+<Button variant="outline" color="success">Outline</Button>`;
 
 const disabledCodeString = `<Button disabled>Primary</Button>`;
 
 const withIconCodeString = `import { IoCloudUploadOutline, IoSendSharp } from "react-icons/io5";
 
 <Button><IoCloudUploadOutline size={20} /> Upload</Button>
-<Button variant="secondary" color="#257180">Send <IoSendSharp /></Button>`;
+<Button variant="secondary" color="success">Send <IoSendSharp /></Button>`;
 
 function ButtonPreview() {
   const [loading, setLoading] = useState(false);
@@ -47,35 +47,35 @@ function ButtonPreview() {
       </div>
 
       <h3>Sizes</h3>
-      <p>Size props: sm-small, md-medium(default), lg-large. Applies for all variants</p>
+      <p>Size props: small, medium (default), large. Applies for all variants</p>
 
       <div className="preview-container">
         <div className="preview">
-          <Button size="sm">Small</Button>
-          <Button size="md">Medium</Button>
-          <Button size="lg">Large</Button>
+          <Button size="small">Small</Button>
+          <Button size="medium">Medium</Button>
+          <Button size="large">Large</Button>
         </div>
 
         <div className="preview" style={{ padding: "0px 20px" }}>
-          <Button size="sm" variant="secondary">
+          <Button size="small" variant="secondary">
             Small
           </Button>
-          <Button size="md" variant="secondary">
+          <Button size="medium" variant="secondary">
             Medium
           </Button>
-          <Button size="lg" variant="secondary">
+          <Button size="large" variant="secondary">
             Large
           </Button>
         </div>
 
         <div className="preview">
-          <Button size="sm" variant="outline">
+          <Button size="small" variant="outline">
             Small
           </Button>
-          <Button size="md" variant="outline">
+          <Button size="medium" variant="outline">
             Medium
           </Button>
-          <Button size="lg" variant="outline">
+          <Button size="large" variant="outline">
             Large
           </Button>
         </div>
@@ -86,11 +86,11 @@ function ButtonPreview() {
       <h3>Colors</h3>
       <div className="preview-container">
         <div className="preview">
-          <Button color="#EF4444">Primary</Button>
+          <Button color="error">Primary</Button>
           <Button variant="secondary" color="#7E60BF">
             Secondary
           </Button>
-          <Button variant="outline" color="#257180">
+          <Button variant="outline" color="success">
             Outline
           </Button>
         </div>
@@ -121,7 +121,7 @@ function ButtonPreview() {
             Upload
           </Button>
 
-          <Button variant="secondary" color="#257180">
+          <Button variant="secondary" color="success">
             Send
             <IoSendSharp />
           </Button>
@@ -143,10 +143,10 @@ function ButtonPreview() {
 
         <div className="preview">
           <Button isLoading={loading}>Primary</Button>
-          <Button variant="secondary" isLoading={loading}>
+          <Button variant="secondary" color="primary" isLoading={loading}>
             Secondary
           </Button>
-          <Button variant="outline" isLoading={loading}>
+          <Button variant="outline" color="primary" isLoading={loading}>
             Outline
           </Button>
         </div>

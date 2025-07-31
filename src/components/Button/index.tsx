@@ -6,9 +6,9 @@ type buttonProps = Omit<React.ComponentProps<"button">, "style"> & {
   children?: React.ReactNode;
   className?: string;
   isLoading?: boolean;
-  size?: "sm" | "md" | "lg";
+  size?: "small" | "medium" | "large";
   variant?: "primary" | "secondary" | "outline";
-  color?: string;
+  color?: "primary" | "secondary" | "error" | "success" | string;
   fullWidth?: boolean;
   style?: React.CSSProperties;
   width?: number;
@@ -23,7 +23,7 @@ function Button({
   children,
   className = "",
   variant = "primary",
-  size = "md",
+  size = "medium",
   isLoading = false,
   color = "",
   fullWidth = false,
@@ -48,26 +48,28 @@ function Button({
     }
   }, [ref.current]);
 
+  const selectColor = color in colors ? colors[color] : color;
+
   const customColors = {
-    primary: color,
-    secondary: color ? color + 15 : "",
+    primary: selectColor,
+    secondary: selectColor ? selectColor + 15 : "",
     outline: "",
   };
 
   const onHoverColors = {
-    primary: color ? `color-mix(in oklab, ${color}, #000 12%)` : "",
-    secondary: color ? color + 15 : "",
-    outline: color ? color + 10 : "",
+    primary: selectColor ? `color-mix(in oklab, ${selectColor}, #000 15%)` : "",
+    secondary: selectColor ? selectColor + 15 : "",
+    outline: selectColor ? selectColor + 10 : "",
   };
 
   const styles = {
     backgroundColor: isHovered ? onHoverColors[variant] : customColors[variant],
-    borderColor: variant === "outline" ? color : "",
+    borderColor: variant === "outline" ? selectColor : "",
     color:
       variant !== "primary"
         ? variant === "secondary" && isHovered
-          ? `color-mix(in oklab, ${color}, #000 40%)`
-          : color
+          ? `color-mix(in oklab, ${selectColor}, #000 40%)`
+          : selectColor
         : "auto",
     ...style,
   };
@@ -96,7 +98,7 @@ function Button({
       <CircularProgress
         size={loaderSize[size]}
         style={{
-          color: variant !== "primary" ? (color ? color : "var(--color-primary)") : "#fff",
+          color: variant !== "primary" ? (selectColor ? selectColor : "#00000080") : "#fff",
         }}
         thickness={7}
       />
@@ -113,13 +115,20 @@ const variants = {
 };
 
 const sizes = {
-  sm: "btn-sm",
-  md: "btn-md",
-  lg: "btn-lg",
+  small: "btn-sm",
+  medium: "btn-md",
+  large: "btn-lg",
 };
 
 const loaderSize = {
-  sm: 18,
-  md: 20,
-  lg: 22,
+  small: 18,
+  medium: 20,
+  large: 22,
+};
+
+const colors: Record<string, string> = {
+  primary: "#3f51b5",
+  secondary: "#6e8295",
+  error: "#E7000B",
+  success: "#257180",
 };
