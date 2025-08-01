@@ -12,7 +12,7 @@ function PageLayout() {
       <nav>
         <div className="flex-align-center">
           <TbCodeDots size={30} color="#3f51b5" />
-          <h4>My Components</h4>
+          <h4>React Components</h4>
         </div>
       </nav>
 

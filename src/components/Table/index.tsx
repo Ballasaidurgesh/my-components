@@ -2,7 +2,7 @@ import "./styles.scss";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { useEffect, useRef, useState } from "react";
-import { MenuItem, Pagination, Select, Skeleton, styled } from "@mui/material";
+import { MenuItem, Pagination, Select, styled } from "@mui/material";
 import {
   resetTableData,
   updateFilters,
@@ -21,6 +21,8 @@ import { IoCloseOutline } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
 import { TiFilter } from "react-icons/ti";
 import { GrClear } from "react-icons/gr";
+import PageLoader from "../PageLoader";
+import { motion } from "framer-motion";
 
 export type TColumns = {
   label: string;
@@ -30,14 +32,12 @@ export type TColumns = {
   textOverflow?: "nowrap" | "break-word";
   disableSearch?: boolean;
   disableSortBy?: boolean;
-  renderComponent?: any;
+  renderComponent?: (props: any) => React.JSX.Element;
   searchType?: "date" | "menu" | "text";
   menuOptions?: { label: string; value: string }[];
 }[];
 
-type TRows = {
-  [key: string]: any;
-};
+type TRows = Record<string, any>;
 
 type tableProps = {
   columns: TColumns;
@@ -46,8 +46,10 @@ type tableProps = {
   checkboxSelection?: boolean;
   disableSearch?: boolean;
   disableSortBy?: boolean;
-  cellPadding?: string;
-  height?: number;
+  cellPadding?: string | number;
+  height?: string | number;
+  isLoading?: boolean;
+  renderExpandedContent?: React.ReactNode;
 };
 
 const limitOptions = [10, 20, 30, 40, 50];
@@ -61,10 +63,12 @@ function Table({
   disableSortBy = false,
   cellPadding = "",
   height,
+  isLoading = false,
+  renderExpandedContent,
 }: tableProps) {
-  const { page, limit, isLoading, selectedRows, filters } = useAppSelector((state) => state.table);
-  const dispatch = useAppDispatch();
   const ref = useRef<HTMLTableSectionElement>(null);
+  const dispatch = useAppDispatch();
+  const { page, limit, filters, sortBy, selectedRows } = useAppSelector((state) => state.table);
 
   const totalPages = Math.ceil(totalRecords / limit);
   const startIndex = page * limit - limit + 1;
@@ -73,25 +77,13 @@ function Table({
   const [activeSearchField, setActiveSearchField] = useState<string>();
   const [activeSearchValue, setActiveSearchValue] = useState<string | null>();
   const [timer, setTimer] = useState<NodeJS.Timeout>();
-
-  const [sortOrder, setSortOrder] = useState<string | null>(null);
-  const [sortField, setSortField] = useState<string | null>(null);
+  const [expandedRows, setExpandedRows] = useState<number[]>([]);
 
   useOnClickOutside(ref, () => setActiveSearchField(""));
 
   useEffect(() => {
     dispatch(resetTableData());
   }, []);
-
-  useEffect(() => {
-    const sortByData = { sortOrder, sortField };
-
-    if (sortField === null) {
-      dispatch(updateSortBy({}));
-    } else {
-      dispatch(updateSortBy(sortByData));
-    }
-  }, [sortField, sortOrder]);
 
   function THead() {
     function handleSelectAll(e: React.ChangeEvent<HTMLInputElement>) {
@@ -105,27 +97,24 @@ function Table({
     }
 
     function handleSortBy(value: string) {
-      setSortField(value);
-
-      if (sortOrder === null || sortField !== value) {
-        setSortOrder("asc");
-      } else if (sortOrder === "asc") {
-        setSortOrder("desc");
+      if (!sortBy?.sortOrder || !sortBy?.sortField || sortBy?.sortField !== value) {
+        dispatch(updateSortBy({ sortField: value, sortOrder: "asc" }));
+      } else if (sortBy?.sortOrder === "asc") {
+        dispatch(updateSortBy({ sortField: value, sortOrder: "desc" }));
       } else {
-        setSortOrder(null);
-        setSortField(null);
+        dispatch(updateSortBy({}));
       }
     }
 
     function RenderSortByIcon({ onClick, value }: { onClick: () => void; value: string }) {
-      return sortOrder === "desc" && sortField === value ? (
+      return sortBy?.sortOrder === "desc" && sortBy?.sortField === value ? (
         <HiArrowDown
           className="sort-icon"
           title="Unsort"
           onClick={onClick}
           style={{ visibility: "visible" }}
         />
-      ) : sortOrder === null || sortField !== value ? (
+      ) : sortBy?.sortOrder === null || sortBy?.sortField !== value ? (
         <LuArrowUpDown
           className="sort-icon"
           onClick={onClick}
@@ -261,7 +250,7 @@ function Table({
         <tr>
           {/* checkbox select all */}
           {rows.length !== 0 && checkboxSelection && (
-            <th style={{ padding: cellPadding }}>
+            <th>
               <input
                 type="checkbox"
                 checked={rows?.length === selectedRows?.length}
@@ -272,7 +261,7 @@ function Table({
 
           {/* Mapping columns data */}
           {columns?.map((column, index) => (
-            <th key={index} style={{ padding: cellPadding }}>
+            <th key={index}>
               <div className="table__cell-title-container">
                 {/* column title */}
                 <div
@@ -320,6 +309,8 @@ function Table({
     );
   }
 
+  const customPadding = { paddingTop: cellPadding, paddingBottom: cellPadding };
+
   function TBody() {
     function handleRowsSelection(value: TRows) {
       const existingItem = selectedRows?.some((item) => item?.id === value?.id);
@@ -332,79 +323,83 @@ function Table({
       }
     }
 
+    function handleExpandRow(rowId: number) {
+      setExpandedRows((prev) =>
+        prev.includes(rowId) ? prev.filter((id) => id !== rowId) : [...prev, rowId],
+      );
+    }
+
     return (
       <tbody>
         {rows?.map((row, index) => (
-          <tr key={index}>
-            {checkboxSelection && (
-              <td style={{ padding: cellPadding }}>
-                <input
-                  type="checkbox"
-                  checked={selectedRows?.some((item) => item?.id === row?.id)}
-                  onChange={() => handleRowsSelection(row)}
-                />
-              </td>
-            )}
+          <>
+            <tr key={index}>
+              {checkboxSelection && (
+                <td style={customPadding}>
+                  <input
+                    type="checkbox"
+                    checked={selectedRows?.some((item) => item?.id === row?.id)}
+                    onChange={() => handleRowsSelection(row)}
+                  />
+                </td>
+              )}
 
-            {columns?.map((column, columnIndex) => (
-              <td
-                key={columnIndex}
-                style={{
-                  padding: cellPadding,
-                  maxWidth: column?.maxWidth,
-                  ...(column?.width && { minWidth: column?.width, maxWidth: column?.width }),
-                  ...(column?.textOverflow === "break-word" && {
-                    whiteSpace: "initial",
-                    overflowWrap: "break-word",
-                  }),
-                }}
+              {columns?.map((column, columnIndex) => (
+                <td
+                  key={columnIndex}
+                  onClick={() => {
+                    if (renderExpandedContent) {
+                      handleExpandRow(row?.id);
+                    }
+                  }}
+                  style={{
+                    maxWidth: column?.maxWidth,
+                    ...customPadding,
+                    ...(column?.width && { minWidth: column?.width, maxWidth: column?.width }),
+                    ...(column?.textOverflow === "break-word" && {
+                      whiteSpace: "initial",
+                      overflowWrap: "break-word",
+                    }),
+                  }}
+                >
+                  {typeof row?.[column?.field] !== "object"
+                    ? row?.[column?.field]
+                    : column?.renderComponent && (
+                        <column.renderComponent {...(row?.[column?.field] as object)} />
+                      )}
+                </td>
+              ))}
+            </tr>
+
+            <td
+              key={row?.id}
+              className="table__expandable-content-cell"
+              colSpan={columns.length + (checkboxSelection ? 1 : 0)}
+            >
+              <motion.div
+                initial={{ height: 0 }}
+                animate={{ height: expandedRows.includes(row?.id) ? "auto" : 0 }}
+                style={{ overflow: "hidden" }}
               >
-                {typeof row?.[column?.field] !== "object"
-                  ? row?.[column?.field]
-                  : column?.renderComponent && (
-                      <column.renderComponent {...(row?.[column?.field] as object)} />
-                    )}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    );
-  }
-
-  function TableLoading() {
-    const staticRows = Array(8).fill("");
-
-    return (
-      <tbody>
-        {staticRows.map((_, i) => (
-          <tr key={i}>
-            {columns.map((_, index) => (
-              <td key={index}>
-                <Skeleton variant="text" sx={{ fontSize: "0.85rem" }} />
-              </td>
-            ))}
-          </tr>
+                {renderExpandedContent}
+              </motion.div>
+            </td>
+          </>
         ))}
       </tbody>
     );
   }
 
   return (
-    <div className="table-container" style={{ height: height ? `${height}vh` : "" }}>
-      {/* <DateSearch /> */}
+    <div className="table-container" style={{ height: height ?? "" }}>
       <div className="table" style={{ height: totalRecords === 0 ? "100%" : "" }}>
         <table>
           <THead />
-
-          {isLoading ? (
-            <TableLoading />
-          ) : rows.length !== 0 ? (
-            <TBody />
-          ) : (
-            <h2 className="table__no-data">No Data Available!</h2>
-          )}
+          <TBody />
         </table>
+
+        {rows.length === 0 && <h2 className="table__no-data">No data available!</h2>}
+        <PageLoader isLoading={isLoading} className="table__spinner-wrapper" />
       </div>
 
       {/* pagination */}

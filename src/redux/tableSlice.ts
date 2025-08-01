@@ -3,10 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 type state = {
   page: number;
   limit: number;
-  isLoading: boolean;
-  selectedRows: { [key: string]: any }[];
-  filters: { [key: string]: string | number };
-  sortBy: {};
+  selectedRows: Record<string, any>[];
+  filters: Record<string, string | number>;
+  sortBy: Record<string, string>;
 };
 
 const initialState: state = {
@@ -15,7 +14,6 @@ const initialState: state = {
   selectedRows: [],
   filters: {},
   sortBy: {},
-  isLoading: false,
 };
 
 const tableSlice = createSlice({
@@ -42,10 +40,6 @@ const tableSlice = createSlice({
       state.sortBy = action.payload;
     },
 
-    updateLoading: (state, action) => {
-      state.isLoading = action.payload;
-    },
-
     clearFilters: (state) => {
       state.filters = {};
     },
@@ -57,7 +51,6 @@ const tableSlice = createSlice({
 export const {
   updateFilters,
   updateLimit,
-  updateLoading,
   updatePage,
   updateSelectedRows,
   updateSortBy,
