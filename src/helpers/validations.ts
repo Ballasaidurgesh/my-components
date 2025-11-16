@@ -58,7 +58,7 @@ export function validateFormDataOnSubmit(
   formErrors = JSON.stringify(formErrors);
   formErrors = JSON.parse(formErrors);
 
-  const isError = Object.keys(formErrors).length === 0;
+  const isError = Object.keys(formErrors).length !== 0;
 
   return { isError, formErrors };
 }

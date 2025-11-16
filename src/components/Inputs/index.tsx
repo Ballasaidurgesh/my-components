@@ -1,25 +1,12 @@
 import "./styles.scss";
-import TextInput from "./TextInput";
-import Autocomplete from "./Autocomplete";
-import Textarea from "./Textarea";
-import RadioGroup from "./RadioGroup";
-import CheckBoxGroup from "./CheckboxGroup";
-import Dropdown from "./Dropdown";
-import DateSelect from "./DateSelect";
-import OtpInput from "./OtpInput";
-import PhoneInput from "./PhoneInput";
-
-export {
-  TextInput,
-  Autocomplete,
-  Textarea,
-  RadioGroup,
-  CheckBoxGroup,
-  Dropdown,
-  DateSelect,
-  OtpInput,
-  PhoneInput,
-};
+export { default as TextInput } from "./TextInput";
+export { default as Textarea } from "./Textarea";
+export { default as RadioGroup } from "./RadioGroup";
+export { default as CheckBoxGroup } from "./CheckboxGroup";
+export { default as Dropdown } from "./Dropdown";
+export { default as DateSelect } from "./DateSelect";
+export { default as OtpInput } from "./OtpInput";
+export { default as PhoneInput } from "./PhoneInput";
 
 export type TInputs = {
   label?: string;

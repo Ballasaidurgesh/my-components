@@ -1,71 +1,75 @@
-import React, { useState } from "react";
 import "./styles.scss";
+import React, { useState } from "react";
 import { VscEye, VscEyeClosed } from "react-icons/vsc";
 
-const textFormats: { [key: string]: RegExp } = {
-  number: /\D/g,
-  alphabets: /[^a-zA-Z\s]/g,
-  alphabetsWithoutSpace: /[^a-zA-Z]/g,
-};
+const textFormats = {
+  digits: /\D/g,
+  letters: /[^a-zA-Z\s]/g,
+  lettersDigits: /[^a-zA-Z0-9\s]/g,
+  lettersNoSpace: /[^a-zA-Z]/g,
+} as const;
 
-type textInputProps = Omit<React.ComponentProps<"input">, "onChange" | "value"> & {
+type omitProps = "onChange" | "value" | "type";
+
+type textInputProps = Omit<React.ComponentProps<"input">, omitProps> & {
   label?: string;
   isRequired?: boolean;
-  placeholder?: string;
   name: string;
-  value: string | { [key: string]: any };
-  error?: string | { [key: string]: string };
+  value: string | Record<string, string>;
   onChange?: (name: string, value: string) => void;
+  error?: string | Record<string, string>;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
   type?: "text" | "password" | "number";
-  format?: "alphabets" | "number" | "currency" | "alphabetsWithoutSpace";
+  textFormat?: "letters" | "digits" | "currency" | "lettersNoSpace" | "lettersDigits";
 };
 
 function TextInput({
-  label = "",
-  name = "",
+  label,
+  isRequired,
+  name,
+  value,
+  onChange = () => null,
   error,
   placeholder,
-  type,
-  isRequired,
-  value,
-  format,
-  onChange = () => null,
+  type = "text",
+  textFormat,
+  rightIcon,
+  leftIcon,
   ...rest
 }: textInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    let value = e.target.value;
+    let newValue = e.target.value;
 
-    if (format) {
-      if (format === "currency") {
-        value = value.replace(textFormats.number, "");
-        value = value ? parseFloat(value).toLocaleString() : "";
-        onChange(name, value);
+    if (textFormat) {
+      if (textFormat === "currency") {
+        newValue = newValue.replace(textFormats.digits, "");
+        newValue = newValue ? parseFloat(newValue).toLocaleString() : "";
+        onChange(name, newValue);
       } else {
-        onChange(name, value.replace(textFormats[format], ""));
+        onChange(name, newValue.replace(textFormats[textFormat], ""));
       }
     } else {
-      onChange(name, value);
+      onChange(name, newValue);
     }
   }
 
-  const inputValue = typeof value === "string" ? value : value?.[name] || "";
-  const inputError = typeof error === "string" ? error : error?.[name] || "";
+  const inputValue = typeof value === "object" ? value?.[name] : value;
+  const inputError = typeof error === "object" ? error?.[name] : error;
 
   return (
     <div className="input-container text-input">
       {label && (
-        <label>
+        <label htmlFor={name}>
           {label} {isRequired && <span>*</span>}
         </label>
       )}
 
-      <div
-        className={`text-input__container ${
-          type === "password" ? "text-input__password-container" : ""
-        }`}
-      >
+      <div className={`text-input__container`}>
+        {leftIcon && <div className="text-input__custom-icon">{leftIcon}</div>}
+
         <input
           placeholder={
             placeholder ? placeholder : label ? "Enter your " + label?.toLowerCase() : ""
@@ -81,16 +85,21 @@ function TextInput({
         {type === "password" && (
           <>
             {showPassword ? (
-              <VscEyeClosed className="eye-icon" onClick={() => setShowPassword(false)} />
+              <VscEyeClosed
+                className="text-input__eye-icon"
+                onClick={() => setShowPassword(false)}
+              />
             ) : (
-              <VscEye className="eye-icon" onClick={() => setShowPassword(true)} />
+              <VscEye className="text-input__eye-icon" onClick={() => setShowPassword(true)} />
             )}
           </>
         )}
+
+        {rightIcon && <div className="text-input__custom-icon">{rightIcon}</div>}
       </div>
 
       <div className="input-error">
-        {inputError === "required" ? `${label} is required` : inputError}
+        {inputError === "required" ? `${label ?? "This field"} is required` : inputError}
       </div>
     </div>
   );

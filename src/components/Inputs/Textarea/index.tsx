@@ -1,36 +1,48 @@
 import "./styles.scss";
-import { TInputs } from "..";
 
-type textareaProps = TInputs & {
-  rows?: number;
-  maxLength?: number;
+type textareaProps = Omit<React.ComponentProps<"textarea">, "onChange" | "value"> & {
+  label?: string;
+  isRequired?: boolean;
+  name: string;
+  value: string | Record<string, string>;
+  error?: string | Record<string, string>;
+  onChange?: (name: string, value: string) => void;
 };
 
 const Textarea = ({
-  name,
   label,
-  placeholder,
   isRequired,
-  error,
-  rows = 5,
-  onChange = () => null,
+  placeholder,
+  name,
   value,
-  maxLength,
+  error,
+  onChange = () => null,
+  rows = 5,
+  ...rest
 }: textareaProps) => {
+  const inputValue = typeof value === "object" ? value?.[name] : value;
+  const inputError = typeof error === "object" ? error?.[name] : error;
+
   return (
     <div className="input-container">
-      <label>
-        {label} {isRequired && <span>*</span>}
-      </label>
+      {label && (
+        <label>
+          {label} {isRequired && <span>*</span>}
+        </label>
+      )}
+
       <textarea
-        placeholder={placeholder ? placeholder : "Type here..."}
         name={name}
-        value={value}
-        maxLength={maxLength}
-        rows={rows}
+        value={inputValue}
         onChange={(event) => onChange(name, event.target.value)}
-      ></textarea>
-      <small>{error}</small>
+        placeholder={placeholder ?? "Type here..."}
+        rows={rows}
+        {...rest}
+      />
+
+      <div className="input-error">
+        {inputError === "required" ? `${label ?? "This field"} is required` : inputError}
+      </div>
     </div>
   );
 };

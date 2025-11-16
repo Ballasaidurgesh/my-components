@@ -5,34 +5,49 @@
     border-radius: var(--input-border-radius);
     padding: 0 10px;
     background-color: #fff;
-  }
-
-  &__password-container {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
+  }
 
-    .eye-icon {
-      font-size: 1.4rem;
-      cursor: pointer;
-      color: #00000060;
-    }
+  &__eye-icon {
+    font-size: 1.4rem;
+    cursor: pointer;
+    color: #00000090;
+  }
+
+  &__custom-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   input {
     width: 100%;
-    padding: 10px 0;
+    padding: 8px 0;
     font-family: var(--input-font-family);
     font-size: var(--input-font-size);
     border: none;
     outline: none;
 
     &:disabled {
-      background: #ebebeb;
+      background: transparent;
     }
 
     &::placeholder {
       color: var(--color-input-placeholder);
+      font-weight: 300;
+    }
+
+    /* Remove the default autofill background color */
+    &:-webkit-autofill {
+      box-shadow: 0 0 0 1000px #fff inset !important;
     }
   }
+}
+
+
+.text-input__container:has(input:disabled) {
+  background-color: var(--color-input-disabled);
+  border-color: var(--color-input-disabled);
 }

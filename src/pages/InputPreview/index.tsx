@@ -1,6 +1,7 @@
-import { Dropdown, TextInput } from "@/components/Inputs";
+import { DateSelect, Dropdown, Textarea, TextInput } from "@/components/Inputs";
 import { TFormValidations, validateFormDataOnChange } from "@/helpers/validations";
 import { useState } from "react";
+import { IoMailOutline } from "react-icons/io5";
 
 const formValidations: TFormValidations = [
   { name: "email", validations: { isRequired: true, isEmail: true } },
@@ -31,7 +32,14 @@ function InputPreview() {
 
   return (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0 1rem" }}>
-      <TextInput label="Email" name="email" value={inputs} onChange={handleChange} error={error} />
+      <TextInput
+        label="Email"
+        name="email"
+        value={inputs}
+        onChange={handleChange}
+        error={error}
+        leftIcon={<IoMailOutline size={20} />}
+      />
       <TextInput
         label="Mobile"
         name="mobile"
@@ -55,12 +63,38 @@ function InputPreview() {
       />
       <TextInput label="Last Name" name="last" value={inputs} onChange={handleChange} />
 
+      <TextInput
+        label="Amount"
+        name="amount"
+        value={inputs}
+        onChange={handleChange}
+        textFormat="currency"
+        disabled
+      />
+
       <Dropdown
         label="Country"
         name="country"
         value={inputs?.country}
         options={dropdownOptions}
         onChange={handleChange}
+      />
+
+      <Textarea
+        label="Address"
+        name="address"
+        value={inputs?.address}
+        onChange={handleChange}
+        error={error?.address}
+        maxLength={100}
+      />
+
+      <DateSelect
+        label="Date"
+        name="date"
+        value={inputs?.date}
+        onChange={handleChange}
+        error={error?.date}
       />
     </div>
   );

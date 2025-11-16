@@ -1,13 +1,14 @@
 :root {
-  --color-input-label: #6E8295;
+  --color-input-label: var(--color-text-primary);
   --color-input-placeholder: #B4B4B8;
-  --color-input-border: #CFD8DF;
   --color-input-selected: #f3f7fd;
-
-  --input-font-family: var(--font-primary);
-  --input-font-size: 0.85rem;
+  --color-input-border: #CFD8DF;
+  --color-input-disabled: #f5f5f5;
   --input-border: 1px solid var(--color-input-border);
   --input-border-radius: 8px;
+
+  --input-font-family: var(--font-primary);
+  --input-font-size: 0.8rem;
 }
 
 .input-container {
@@ -27,7 +28,7 @@
 
   .input-error {
     color: red;
-    font-size: 0.75rem;
-    min-height: 18px;
+    font-size: 0.65rem;
+    min-height: 16px;
   }
 }

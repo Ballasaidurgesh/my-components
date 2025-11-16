@@ -375,6 +375,7 @@ function Table({
               key={row?.id}
               className="table__expandable-content-cell"
               colSpan={columns.length + (checkboxSelection ? 1 : 0)}
+              style={{ padding: 0 }}
             >
               <motion.div
                 initial={{ height: 0 }}

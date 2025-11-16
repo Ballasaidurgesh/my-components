@@ -62,7 +62,7 @@ const CustomDatePicker = styled(DatePicker)({
   },
 
   ".MuiInputBase-input": {
-    padding: "14px 10px",
+    padding: "10px 10px",
     fontSize: "var(--input-font-size)",
     fontFamily: "var(--input-font-family)",
   },

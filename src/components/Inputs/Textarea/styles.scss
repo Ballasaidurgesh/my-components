@@ -2,7 +2,7 @@
   textarea {
     resize: none;
     width: 100%;
-    padding: 10px;
+    padding: 8px 10px;
     background-color: #fff;
     font-family: var(--input-font-family);
     font-size: var(--input-font-size);
@@ -15,6 +15,7 @@
 
     &::placeholder {
       color: var(--color-input-placeholder);
+      font-weight: 300;
     }
   }
 }
