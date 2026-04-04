@@ -105,7 +105,6 @@ function Button({
     </button>
   );
 }
-
 export default Button;
 
 const variants = {
@@ -127,7 +126,7 @@ const loaderSize = {
 };
 
 const colors: Record<string, string> = {
-  primary: "#3f51b5",
+  primary: "#4B2AF0",
   secondary: "#6e8295",
   error: "#E7000B",
   success: "#257180",

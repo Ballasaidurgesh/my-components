@@ -206,6 +206,7 @@ function FileUpload({
   return (
     <div className="file-upload input-container">
       {label && <label>{label}</label>}
+
       <div
         className="file-upload__choose-file-container"
         onDragOver={onDragOver}

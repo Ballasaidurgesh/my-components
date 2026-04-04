@@ -1,4 +1,4 @@
-import { DateSelect, Dropdown, Textarea, TextInput } from "@/components/Inputs";
+import { Select, Textarea, TextInput } from "@/components/Inputs";
 import { TFormValidations, validateFormDataOnChange } from "@/helpers/validations";
 import { useState } from "react";
 import { IoMailOutline } from "react-icons/io5";
@@ -63,6 +63,14 @@ function InputPreview() {
       />
       <TextInput label="Last Name" name="last" value={inputs} onChange={handleChange} />
 
+      <Select
+        label="Country"
+        name="country"
+        value={inputs?.country}
+        options={dropdownOptions}
+        onChange={handleChange}
+      />
+
       <TextInput
         label="Amount"
         name="amount"
@@ -72,14 +80,6 @@ function InputPreview() {
         disabled
       />
 
-      <Dropdown
-        label="Country"
-        name="country"
-        value={inputs?.country}
-        options={dropdownOptions}
-        onChange={handleChange}
-      />
-
       <Textarea
         label="Address"
         name="address"
@@ -87,14 +87,6 @@ function InputPreview() {
         onChange={handleChange}
         error={error?.address}
         maxLength={100}
-      />
-
-      <DateSelect
-        label="Date"
-        name="date"
-        value={inputs?.date}
-        onChange={handleChange}
-        error={error?.date}
       />
     </div>
   );
